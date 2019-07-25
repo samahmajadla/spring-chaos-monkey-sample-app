@@ -1,0 +1,9 @@
+chaos:
+  monkey:
+    enabled: true
+    watcher:
+      component: false
+      controller: true
+      repository: true
+      rest-controller: false
+      service: true
