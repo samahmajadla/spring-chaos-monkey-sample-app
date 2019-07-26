@@ -50,6 +50,58 @@ chaos:
   monkey:
     enabled: true
     watcher:
+NOTE: This project was taken from https://github.com/spring-projects/spring-petclinic, and was modified to include Chaos Monkey.
+
+Chaos Monkey for Spring Boot
+---
+
+**Setup**
+
+Include Chaos Monkey in the dependencies in your pom.xml.
+
+~~~
+      <dependency>
+          <groupId>de.codecentric</groupId>
+          <artifactId>chaos-monkey-spring-boot</artifactId>
+          <version>2.0.2</version>
+      </dependency>
+~~~
+
+ Turn on the Chaos Monkey endpoints in your application properties.
+
+~~~
+ management.endpoint.chaosmonkey.enabled=true
+ management.endpoint.chaosmonkeyjmx.enabled=true
+
+ //inlcude all endpoints
+ management.endpoints.web.exposure.include=*
+
+ //include specific endpoints
+ management.endpoints.web.exposure.include=health,info,chaosmonkey
+~~~
+
+Chaos Monkey for Spring Boot uses watchers to "assault" various types of classes. It can be used to assault classes annotated with @Service, @RestController, @Controller, @Repository, and @Component.
+You will have to indicate which watchers you would like to use prior to compilation and runtime.
+
+Include the following in either your application.properties or an application.yml. It is encouraged to create a separate application-chaos-monkey.yml. Be sure to indicate which watchers you would like with "true" or "false":
+
+YOU CANNOT CHANGE THIS DURING RUNTIME. If no watchers are enabled, no assaults will be performed.
+
+application.properties
+~~~
+chaos.monkey.watcher.component=false
+chaos.monkey.watcher.controller=false
+chaos.monkey.watcher.restController=true
+chaos.monkey.watcher.service=true
+chaos.monkey.watcher.repository=false
+~~~
+
+application.yml
+~~~
+chaos:
+  monkey:
+    enabled: true
+    watcher:
       component: false
       controller: false
       repository: false
@@ -87,6 +139,72 @@ See https://codecentric.github.io/chaos-monkey-spring-boot/2.0.2/#_examples for 
 
 **Assaults**
 
+The following is an example of an assault configuration.
+
+The important properties to note are:
+
+| Property | Description |
+|---|---|
+| level | How frequent the "assaults" are. level 1 = each request is attacked, level 5 = every 5th request is attacked, level 10 = every 10th request is attacked. Available values are 1 - 10|
+| latencyRangeStart | minimum latency during assault |
+|latencyRangeEnd | maximum latency during assault |
+| latencyActive | Are latency assaults on or off |
+| exceptionsActive | Are exception assaults on or off |
+| exception | the exception type and message |
+| killApplicationActive| Are assaults that will kill the application on or off|
+| watchedCustomServices| You may specify a list of particular methods/services you want Chaos Monkey to assault. If you provide an empty list ([]) or null, all requests (satisfying the watcher configuration and assault level) will be assaulted|
+ 
+~~~
+{
+    "level": 5,
+    "latencyRangeStart": 1000,
+    "latencyRangeEnd": 3000,
+    "latencyActive": true,
+    "exceptionsActive": false,
+    "exception": {
+        "type": null,
+        "arguments": null
+    },
+    "killApplicationActive": false,
+    "watchedCustomServices": null,
+    "frozen": false,
+    "targetSource": {
+        "target": {
+            "level": 5,
+            "latencyRangeStart": 1000,
+            "latencyRangeEnd": 3000,
+            "latencyActive": true,
+            "exceptionsActive": false,
+            "exception": {
+                "type": null,
+                "arguments": null
+            },
+            "killApplicationActive": false,
+            "watchedCustomServices": null
+        },
+        "static": true,
+        "targetClass": "de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties"
+    },
+    "targetClass": "de.codecentric.spring.boot.chaos.monkey.configuration.AssaultProperties",
+    "proxiedInterfaces": [],
+    "advisors": [
+        {
+            "order": 2147483647,
+            "advice": {},
+            "pointcut": {
+                "classFilter": {},
+                "methodMatcher": {
+                    "runtime": false
+                }
+            },
+            "perInstance": true
+        }
+    ],
+    "proxyTargetClass": true,
+    "exposeProxy": false,
+    "preFiltered": false
+}
+~~~
 -------------------------------------
 
 # Spring PetClinic Sample Application [![Build Status](https://travis-ci.org/spring-projects/spring-petclinic.png?branch=master)](https://travis-ci.org/spring-projects/spring-petclinic/)
