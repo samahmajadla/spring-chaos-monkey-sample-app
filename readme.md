@@ -68,11 +68,24 @@ java -jar <YOURAPP>.jar --spring.profiles.active=chaos-monkey
 
 **Available Requests**
 
+We have set up our properties to allow us to send Chaos Monkey requests during runtime.
 
+The first request you will want to send is one to verify that Chaos Monkey is enabled. All requests are listed below.
+You will also want to send a POST request to "/chaosmonkey/assaults" with the assault configuration desired. Further information regarding Assaults is in the next section.
+
+| endpoint  | Description  | Method |
+|---|---|---|
+| /chaosmonkey  | Get the running Chaos Monkey configuration  | GET  |
+| /chaosmonkey/status  |  Is Chaos Monkey enabled or disabled? | GET  |
+| /chaosmonkey/enable  |  Enable Chaos Monkey | POST  |
+| /chaosmonkey/disable  | Disable Chaos Monkey  |  POST |
+| /chaosmonkey/watcher  | Get the running Watcher configuration. NOTE: Watcher cannot be changed at runtime, they are Spring AOP components that have to be created when the application starts.  |  GET |
+| /chaosmonkey/assaults  |  Get the running Assaults configuration | GET  |
+| /chaosmonkey/assaults  |  Change the Assaults configuration | POST  |
+
+See https://codecentric.github.io/chaos-monkey-spring-boot/2.0.2/#_examples for examples of request responses and request bodies.
 
 **Assaults**
-
-
 
 -------------------------------------
 
