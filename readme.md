@@ -1,4 +1,80 @@
-NOTE: This project was taken from https://github.com/spring-projects/spring-petclinic, and was modified to include Chaos Monkey. 
+NOTE: This project was taken from https://github.com/spring-projects/spring-petclinic, and was modified to include Chaos Monkey.
+
+Chaos Monkey for Spring Boot
+---
+
+**Setup**
+
+Include Chaos Monkey in the dependencies in your pom.xml.
+
+~~~
+      <dependency>
+          <groupId>de.codecentric</groupId>
+          <artifactId>chaos-monkey-spring-boot</artifactId>
+          <version>2.0.2</version>
+      </dependency>
+~~~
+
+ Turn on the Chaos Monkey endpoints in your application properties.
+
+~~~
+ management.endpoint.chaosmonkey.enabled=true
+ management.endpoint.chaosmonkeyjmx.enabled=true
+
+ //inlcude all endpoints
+ management.endpoints.web.exposure.include=*
+
+ //include specific endpoints
+ management.endpoints.web.exposure.include=health,info,chaosmonkey
+~~~
+
+Chaos Monkey for Spring Boot uses watchers to "assault" various types of classes. It can be used to assault classes annotated with @Service, @RestController, @Controller, @Repository, and @Component.
+You will have to indicate which watchers you would like to use prior to compilation and runtime.
+
+Include the following in either your application.properties or an application.yml. It is encouraged to create a separate application-chaos-monkey.yml. Be sure to indicate which watchers you would like with "true" or "false":
+
+YOU CANNOT CHANGE THIS DURING RUNTIME. If no watchers are enabled, no assaults will be performed.
+
+application.properties
+~~~
+chaos.monkey.watcher.component=false
+chaos.monkey.watcher.controller=false
+chaos.monkey.watcher.restController=true
+chaos.monkey.watcher.service=true
+chaos.monkey.watcher.repository=false
+~~~
+
+application.yml
+~~~
+chaos:
+  monkey:
+    enabled: true
+    watcher:
+      component: false
+      controller: false
+      repository: false
+      rest-controller: true
+      service: true
+~~~
+
+**Running your application with Chaos Monkey enabled**
+
+Make sure you are in the project directory. Run:
+
+~~~
+./mvnw package
+java -jar <YOURAPP>.jar --spring.profiles.active=chaos-monkey
+~~~
+
+**Available Requests**
+
+
+
+**Assaults**
+
+
+
+-------------------------------------
 
 # Spring PetClinic Sample Application [![Build Status](https://travis-ci.org/spring-projects/spring-petclinic.png?branch=master)](https://travis-ci.org/spring-projects/spring-petclinic/)
 Deploy this sample application to Pivotal Web Services:
