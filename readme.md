@@ -15,16 +15,13 @@ Include Chaos Monkey in the dependencies in your pom.xml.
       </dependency>
 ~~~
 
- Turn on the Chaos Monkey endpoints in your application properties.
+Turn on the Chaos Monkey endpoints in your application properties.
 
 ~~~
  management.endpoint.chaosmonkey.enabled=true
  management.endpoint.chaosmonkeyjmx.enabled=true
 
- //inlcude all endpoints
  management.endpoints.web.exposure.include=*
-
- //include specific endpoints
  management.endpoints.web.exposure.include=health,info,chaosmonkey
 ~~~
 
