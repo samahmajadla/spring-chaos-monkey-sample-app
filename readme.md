@@ -122,8 +122,10 @@ The important properties to note are:
             "latencyActive": true,
             "exceptionsActive": false,
             "exception": {
-                "type": null,
-                "arguments": null
+                  "type": "java.lang.RuntimeException",
+                  "arguments": [{
+            	      "className": "java.lang.String",
+            	      "value": "You have encountered a runtime exception"}]
             },
             "killApplicationActive": false,
             "watchedCustomServices": null
